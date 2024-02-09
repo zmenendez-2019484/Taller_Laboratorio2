@@ -1,15 +1,15 @@
 const { response, json } = require('express');
 const Mascota = require('../models/mascota');
 
-const mascotasGet = async (req, res = response ) => {
+const mascotasGet = async (req, res = response) => {
     const { limite, desde } = req.query;
-    const query = { estado: true};
+    const query = { estado: true };
 
     const [total, mascotas] = await Promise.all([
         Mascota.countDocuments(query),
         Mascota.find(query)
-        .skip(Number(desde))
-        .limit(Number(limite))
+            .skip(Number(desde))
+            .limit(Number(limite))
     ]);
 
     res.status(200).json({
@@ -20,7 +20,7 @@ const mascotasGet = async (req, res = response ) => {
 
 const getMascotaByid = async (req, res) => {
     const { id } = req.params;
-    const mascota = await Mascota.findOne({_id: id});
+    const mascota = await Mascota.findOne({ _id: id });
 
     res.status(200).json({
         mascota
@@ -29,28 +29,39 @@ const getMascotaByid = async (req, res) => {
 
 const mascotasPut = async (req, res) => {
     const { id } = req.params;
-    const { _id,nombre, sexo, edad , ...resto} = req.body;
-    await Mascota.findByIdAndUpdate(id, resto);
-    const mascota = await Usuario.findOne(id);
+    const { _id, ...resto} = req.body;
+
+    await Mascota.findByIdAndUpdate(id,resto);
+    const mascota = await Mascota.findOne({ _id: id });
 
     res.status(200).json({
-        msg: 'Mascota Actualizado exitosamente',
+        msg: 'Mascota Actualizada exitosamente',
         mascota
     })
 }
 
 const mascotasDelete = async (req, res) => {
-    const {id} = req.params;
-    const mascota = await Mascota.findByIdAndUpdate(id,{estado: false});
+    try {
+        const { id } = req.params;
+        const mascota = await Mascota.findByIdAndUpdate(id, { estado: false });
 
-    res.status(200).json({
-        msg: 'Mascota eliminado exitosamente'
-    });
+        if (!mascota) {
+            return res.status(404).json({ msg: 'Mascota no encontrada' });
+        }
+
+        res.status(200).json({
+            msg: 'Mascota eliminada exitosamente'
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error interno del servidor' });
+    }
 }
 
-const mascotasPost = async (req, res) =>{
+
+const mascotasPost = async (req, res) => {
     const { nombre, sexo, edad } = req.body;
-    const mascota = new Mascota({nombre, sexo, edad});
+    const mascota = new Mascota({ nombre, sexo, edad });
 
     await mascota.save();
     res.status(200).json({

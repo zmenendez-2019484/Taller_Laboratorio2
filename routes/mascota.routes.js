@@ -39,7 +39,7 @@ router.post(
         check("nombre", "El nombre es obligatorio").not().isEmpty(),
         check("sexo", "El sexo es obligatorio").not().isEmpty(),
         check("edad", "La edad es obligatoria").not().isEmpty(),
-
+        validarCampos
     ], mascotasPost);
 
 module.exports = router;

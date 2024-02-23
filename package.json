@@ -1,14 +1,14 @@
 {
-  "name": "api_matutina",
+  "name": "api_mascotas",
   "version": "1.0.0",
-  "description": "Primera API IN6BM",
+  "description": "API DE MASCOTAS",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "Braulio Echeverria",
+  "author": "Ottoniel Menéndez",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
